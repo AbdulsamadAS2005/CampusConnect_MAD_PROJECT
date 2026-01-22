@@ -7,7 +7,7 @@ import android.widget.*;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.mad_project.auth.AuthManager;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -16,16 +16,16 @@ public class RegisterActivity extends AppCompatActivity {
     TextView loginText;
     ProgressBar progressBar;
 
-    FirebaseAuth auth;
+    AuthManager authManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        auth = FirebaseAuth.getInstance();
+        authManager = new AuthManager(this);
 
-        // Bind views (MATCH XML IDs)
+        // Bind views
         username = findViewById(R.id.et_username);
         email = findViewById(R.id.et_email);
         password = findViewById(R.id.et_password);
@@ -56,19 +56,29 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        if (p.length() < 6) {
+            Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         progressBar.setVisibility(View.VISIBLE);
         registerBtn.setEnabled(false);
 
-        auth.createUserWithEmailAndPassword(e, p)
-                .addOnSuccessListener(authResult -> {
-                    progressBar.setVisibility(View.GONE);
-                    Toast.makeText(this, "Registered Successfully", Toast.LENGTH_SHORT).show();
-                    finish(); // go back to Login
-                })
-                .addOnFailureListener(e1 -> {
-                    progressBar.setVisibility(View.GONE);
-                    registerBtn.setEnabled(true);
-                    Toast.makeText(this, e1.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+        authManager.register(u, e, p, new AuthManager.AuthCallback() {
+            @Override
+            public void onSuccess(String message) {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                finish();
+            }
+
+            @Override
+            public void onFailure(String error) {
+                progressBar.setVisibility(View.GONE);
+                registerBtn.setEnabled(true);
+                Toast.makeText(RegisterActivity.this, error, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

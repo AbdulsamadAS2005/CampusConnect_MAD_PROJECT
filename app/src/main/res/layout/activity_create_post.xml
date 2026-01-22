@@ -133,7 +133,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="24dp"
                 android:minHeight="150dp">
 
                 <View
@@ -153,59 +153,6 @@
                     android:textColor="#FFFFFF"
                     android:textSize="16sp" />
             </FrameLayout>
-
-            <!-- Image Attachment Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="24dp"
-                android:paddingVertical="12dp">
-
-                <Button
-                    android:id="@+id/btn_attach_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#FF6D1F"
-                    android:text="📷 Attach Image"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="10dp" />
-
-                <TextView
-                    android:id="@+id/tv_image_name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="16dp"
-                    android:text="No image selected"
-                    android:textColor="#B0B0B0"
-                    android:textSize="14sp" />
-
-                <Button
-                    android:id="@+id/btn_remove_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#FF3D00"
-                    android:text="Remove"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="6dp"
-                    android:visibility="gone" />
-            </LinearLayout>
-
-            <!-- Image Preview -->
-            <ImageView
-                android:id="@+id/iv_image_preview"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="#232323"
-                android:scaleType="centerCrop"
-                android:visibility="gone"
-                android:layout_marginBottom="16dp" />
 
             <!-- Post Button -->
             <Button

@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.mad_project.auth.AuthManager;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -14,16 +14,23 @@ public class LoginActivity extends AppCompatActivity {
     Button loginBtn;
     TextView signUp, forgotPassword;
     ProgressBar progressBar;
-    FirebaseAuth auth;
+    AuthManager authManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        auth = FirebaseAuth.getInstance();
+        authManager = new AuthManager(this);
 
-        // Bind views using correct frontend IDs
+        // Auto-login if already logged in
+        if (authManager.isLoggedIn()) {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
+            return;
+        }
+
+        // Bind views
         email = findViewById(R.id.et_email);
         password = findViewById(R.id.et_password);
         loginBtn = findViewById(R.id.btn_login);
@@ -31,13 +38,14 @@ public class LoginActivity extends AppCompatActivity {
         forgotPassword = findViewById(R.id.tv_forgot_password);
         progressBar = findViewById(R.id.progressBar);
 
+
         loginBtn.setOnClickListener(v -> loginUser());
 
         signUp.setOnClickListener(v ->
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
 
         forgotPassword.setOnClickListener(v ->
-                startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class)));
+                Toast.makeText(this, "Use: test@test.com / password123", Toast.LENGTH_LONG).show());
     }
 
     private void loginUser() {
@@ -52,16 +60,21 @@ public class LoginActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         loginBtn.setEnabled(false);
 
-        auth.signInWithEmailAndPassword(e, p)
-                .addOnSuccessListener(authResult -> {
-                    progressBar.setVisibility(View.GONE);
-                    startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
-                    finish();
-                })
-                .addOnFailureListener(e1 -> {
-                    progressBar.setVisibility(View.GONE);
-                    loginBtn.setEnabled(true);
-                    Toast.makeText(LoginActivity.this, e1.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+        authManager.login(e, p, new AuthManager.AuthCallback() {
+            @Override
+            public void onSuccess(String message) {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
+            }
+
+            @Override
+            public void onFailure(String error) {
+                progressBar.setVisibility(View.GONE);
+                loginBtn.setEnabled(true);
+                Toast.makeText(LoginActivity.this, error, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

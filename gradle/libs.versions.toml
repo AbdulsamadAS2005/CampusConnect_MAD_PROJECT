@@ -1,5 +1,5 @@
 [versions]
-agp = "8.13.2"
+agp = "9.0.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
@@ -8,7 +8,10 @@ material = "1.13.0"
 activity = "1.12.2"
 constraintlayout = "2.2.1"
 googleGmsGoogleServices = "4.4.4"
-firebaseBom = "32.7.0"  # ADD THIS - BOM version
+firebaseBom = "32.7.0"
+firebaseAuth = "24.0.1"
+firebaseDatabase = "22.0.1"
+firebaseStorage = "22.0.1"  # ADD THIS - BOM version
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -25,6 +28,9 @@ firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.r
 # Firebase modules - USE WITHOUT VERSION (BOM manages it)
 firebase-database = { group = "com.google.firebase", name = "firebase-database-ktx" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+google-firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
+firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
