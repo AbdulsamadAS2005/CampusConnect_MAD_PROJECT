@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.mad_project.CommentsActivity;
 import com.example.mad_project.R;
 import com.example.mad_project.models.Post;
 import com.google.firebase.auth.FirebaseAuth;
@@ -125,7 +126,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         // Set click listeners
         holder.ivLike.setOnClickListener(v -> handleLikeClick(post, holder, position));
-        holder.ivComment.setOnClickListener(v -> handleCommentClick());
+
+        // FIXED: Pass the post parameter to handleCommentClick
+        holder.ivComment.setOnClickListener(v -> handleCommentClick(post));
+
         holder.ivShare.setOnClickListener(v -> handleShareClick(post));
 
         // Optional: Make entire card clickable for post details
@@ -143,11 +147,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         toggleLike(post, holder, position);
     }
 
-    private void handleCommentClick() {
-        Toast.makeText(context, "Comments feature coming soon!", Toast.LENGTH_SHORT).show();
-        // TODO: Open CommentsActivity
-        // Intent intent = new Intent(context, CommentsActivity.class);
-        // context.startActivity(intent);
+    // FIXED: Added Post parameter
+    private void handleCommentClick(Post post) {
+        if (post == null || post.getPostId() == null) {
+            Toast.makeText(context, "Error: Post not found", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Open CommentsActivity
+        Intent intent = new Intent(context, CommentsActivity.class);
+        intent.putExtra("postId", post.getPostId());
+        context.startActivity(intent);
     }
 
     private void handleShareClick(Post post) {

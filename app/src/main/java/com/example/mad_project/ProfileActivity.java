@@ -43,19 +43,22 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // Initialize
-        authManager = new AuthManager(this);
+        // Initialize Firebase Auth
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
-        // Check if user is logged in
-        if (!authManager.isLoggedIn()) {
+        // Check if user is logged in via Firebase
+        if (firebaseUser == null) {
+            Toast.makeText(this, "Please login first", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
         }
 
-        // Initialize Firebase
+        // Initialize AuthManager after checking Firebase user
+        authManager = new AuthManager(this);
+
+        // Initialize Firebase Database
         try {
             firebaseUsersRef = FirebaseDatabase.getInstance().getReference("users");
         } catch (Exception e) {
@@ -74,10 +77,15 @@ public class ProfileActivity extends AppCompatActivity {
         ivBack = findViewById(R.id.iv_back);
         progressBar = findViewById(R.id.progressBar);
 
-        // Set current email
-        String currentEmail = authManager.getCurrentUserEmail();
-        if (currentEmail != null) {
-            tvEmail.setText(currentEmail);
+        // Set current email from Firebase user
+        if (firebaseUser.getEmail() != null) {
+            tvEmail.setText(firebaseUser.getEmail());
+        } else {
+            // Fallback to AuthManager
+            String currentEmail = authManager.getCurrentUserEmail();
+            if (currentEmail != null) {
+                tvEmail.setText(currentEmail);
+            }
         }
 
         // Load user profile data
@@ -97,15 +105,12 @@ public class ProfileActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
 
         if (firebaseUser == null) {
-            // No Firebase user, show basic info
             progressBar.setVisibility(View.GONE);
-            tvUserId.setText("Not Available");
-            etUsername.setText(authManager.getCurrentUsername());
-            etBio.setText("User profile");
+            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Always load from Firebase (since we're using Firebase Auth)
+        // Load from Firebase
         firebaseUsersRef.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -117,11 +122,11 @@ public class ProfileActivity extends AppCompatActivity {
                     String username = dataSnapshot.child("username").getValue(String.class);
                     String bio = dataSnapshot.child("bio").getValue(String.class);
 
-                    // Set the user ID (use Firebase UID if not in database)
+                    // Set the user ID
                     tvUserId.setText(userId != null ? userId : firebaseUser.getUid());
 
-                    // Set username (use stored or fallback to auth manager)
-                    String displayUsername = username != null ? username : authManager.getCurrentUsername();
+                    // Set username
+                    String displayUsername = username != null ? username : "User";
                     etUsername.setText(displayUsername);
 
                     // Set bio (or default if empty)
@@ -138,7 +143,7 @@ public class ProfileActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 // Show basic info on error
                 tvUserId.setText(firebaseUser != null ? firebaseUser.getUid() : "N/A");
-                etUsername.setText(authManager.getCurrentUsername());
+                etUsername.setText("User");
                 etBio.setText("Unable to load profile");
                 Toast.makeText(ProfileActivity.this, "Failed to load profile data", Toast.LENGTH_SHORT).show();
             }
@@ -148,7 +153,8 @@ public class ProfileActivity extends AppCompatActivity {
     private void createDefaultProfile() {
         if (firebaseUser == null) return;
 
-        String defaultUsername = authManager.getCurrentUsername();
+        String defaultUsername = firebaseUser.getDisplayName() != null ?
+                firebaseUser.getDisplayName() : "User";
         String defaultBio = "Hey there! I'm using CampusConnect";
 
         tvUserId.setText(firebaseUser.getUid());
@@ -213,6 +219,9 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void logoutUser() {
+        // Logout from Firebase
+        firebaseAuth.signOut();
+        // Logout from AuthManager
         authManager.logout();
         startActivity(new Intent(this, LoginActivity.class));
         finish();
@@ -222,11 +231,8 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // Refresh user data when coming back to profile
-        if (authManager.isLoggedIn()) {
-            String email = authManager.getCurrentUserEmail();
-            if (email != null) {
-                tvEmail.setText(email);
-            }
+        if (firebaseUser != null && firebaseUser.getEmail() != null) {
+            tvEmail.setText(firebaseUser.getEmail());
         }
     }
 }

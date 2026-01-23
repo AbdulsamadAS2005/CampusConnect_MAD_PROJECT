@@ -1,5 +1,8 @@
 package com.example.mad_project.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
     private String userId;
     private String username;
@@ -7,10 +10,10 @@ public class User {
     private String bio;
     private String profileImageUrl;
     private long timestamp;
+    private List<String> followers;
+    private List<String> following;
 
     // Empty constructor for Firebase
-    public User() {
-    }
 
     // Constructor with parameters
     public User(String userId, String username, String email, String bio, String profileImageUrl, long timestamp) {
@@ -22,6 +25,10 @@ public class User {
         this.timestamp = timestamp;
     }
 
+    public User() {
+        followers = new ArrayList<>();
+        following = new ArrayList<>();
+    }
     // Getters and Setters
     public String getUserId() {
         return userId;
@@ -70,4 +77,10 @@ public class User {
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
+
+    public List<String> getFollowers() { return followers; }
+    public void setFollowers(List<String> followers) { this.followers = followers; }
+
+    public List<String> getFollowing() { return following; }
+    public void setFollowing(List<String> following) { this.following = following; }
 }

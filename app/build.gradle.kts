@@ -43,9 +43,12 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.android.gms:play-services-auth:21.5.0")
 
     // Glide for images
     implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 
     // RecyclerView and CardView
     implementation("androidx.recyclerview:recyclerview:1.3.2")

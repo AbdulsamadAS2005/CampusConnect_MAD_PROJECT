@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.example.mad_project.auth.AuthManager;
 import com.example.mad_project.fragments.HomeFragment;
 import com.example.mad_project.fragments.ProfileFragment;
+import com.example.mad_project.fragments.SocialProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         loadFragment(new HomeFragment());
 
         // Bottom navigation listener
+        // In MainActivity.java, update the bottom navigation listener:
         bottomNavigation.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -51,8 +53,12 @@ public class MainActivity extends AppCompatActivity {
 
                 if (item.getItemId() == R.id.nav_home) {
                     fragment = new HomeFragment();
+                } else if (item.getItemId() == R.id.nav_chat) {
+                    // Start ChatListActivity instead of fragment
+                    startActivity(new Intent(MainActivity.this, ChatListActivity.class));
+                    return true;
                 } else if (item.getItemId() == R.id.nav_profile) {
-                    fragment = new ProfileFragment();
+                    fragment = new SocialProfileFragment();
                 }
 
                 if (fragment != null) {
@@ -77,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();  // ADD THIS LINE
         // Exit app on back from main screen
         moveTaskToBack(true);
     }

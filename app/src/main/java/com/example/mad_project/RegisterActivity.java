@@ -69,7 +69,8 @@ public class RegisterActivity extends AppCompatActivity {
             public void onSuccess(String message) {
                 progressBar.setVisibility(View.GONE);
                 Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                // CHANGE THIS: Go to LoginActivity instead of MainActivity
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                 finish();
             }
 

@@ -1,13 +1,14 @@
 {
   "project_info": {
-    "project_number": "469228497076",
-    "project_id": "mad-project-87695",
-    "storage_bucket": "mad-project-87695.firebasestorage.app"
+    "project_number": "630201706049",
+    "firebase_url": "https://campus-connect-ebd1d-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "campus-connect-ebd1d",
+    "storage_bucket": "campus-connect-ebd1d.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:469228497076:android:453cde843c3a8f02b88fe1",
+        "mobilesdk_app_id": "1:630201706049:android:dc24724a4bc187a45208c0",
         "android_client_info": {
           "package_name": "com.example.mad_project"
         }
@@ -15,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBduPx4vGW6vC9as0S_MLvwnCbqUxzYwZI"
+          "current_key": "AIzaSyCPzSrSK6a8YPU4R7uycGiVZxN4jT4KhDc"
         }
       ],
       "services": {
